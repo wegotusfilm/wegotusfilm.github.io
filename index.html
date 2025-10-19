@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEGOTUS FILM</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/footer.css">
+    
+    <!-- favicon 설정 통합 -->
+    <link rel="icon" type="image/x-icon" href="images/favicon/favicon.ico?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+</head>
+<body>
+    <!-- 네비게이션 바 -->
+    <nav class="navbar">
+        <a href="https://wegotusfilm.com">
+            <div class="logo-container">
+                <img src="images/LOGO_WEGOTUSFILM_Fullver_color.png" alt="WEGOTUS FILM" class="logo">
+            </div>
+        </a>
+        <div class="menu-toggle">☰</div>
+        <div class="nav-links">
+            <a href="https://www.notion.so/WEGOTUS-FILM-111148460e79803487ced32574e27782">Music Video</a>
+            <a href="https://www.notion.so/WEGOTUS-FILM-111148460e79803487ced32574e27782">Commercial Film</a>
+            <a href="https://www.notion.so/WEGOTUS-FILM-111148460e79803487ced32574e27782">Fashion Film</a>
+            <a href="https://www.notion.so/WEGOTUS-FILM-111148460e79803487ced32574e27782">CG / VFX</a>
+            <a href="https://www.notion.so/WEGOTUS-FILM-111148460e79803487ced32574e27782">YouTube Content</a>
+        </div> 
+
+                <!-- 회사 소개 -->
+                <div class="company-intro">
+                    <p>위가더스 필름은 2018년부터 후반 작업(모션그래픽 애니메이션, VFX, CG, 색보정 등)을 기반으로 다양한 비쥬얼 콘텐츠를 만드는 영상 제작 전문 업체입니다.</p>
+                </div>
+
+
+    </nav>
+    
+    
+    <!-- 메인 비디오 -->
+    <div class="video-container">
+        <div id="player"></div>
+    </div>
+
+    <!-- 고정 심볼 -->
+    <div class="fixed-symbol">
+        <img src="images/Symbol_WEGOTUSFILM.png" alt="WEGOTUS FILM Symbol" class="symbol">
+    </div>
+
+    <!-- 회사 정보 -->
+    <footer class="company-info">
+        <div class="info-container">
+            <div class="address-info">
+                <p>서울특별시 은평구 은평로11길 12-7 5층</p>
+                <p>5F, 12-7, Eunpyeong-ro 11-gil, Eunpyeong-gu, Seoul, Republic of Korea</p>
+            </div>
+            <div class="contact-info">
+                <p>대표 전화: (+82) 010 2241 9590</p>
+                <p>이메일: wegotusfilm@gmail.com</p>
+                <p>사업자번호 : 856-12-00804</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        // YouTube API 로드
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '315',
+                width: '560',
+                videoId: 'GHsIxg-DLkE',
+                playerVars: {
+                    'autoplay': 1,
+                    'rel': 0,
+                    'modestbranding': 1,
+                    'controls': 0,
+                    'loop': 1,
+                    'mute': 1,  // 자동재생을 위해 mute를 1로 설정
+                    'playsinline': 1  // 모바일에서 자동재생 지원
+                },
+                events: {
+                    'onReady': onPlayerReady,  // 플레이어 준비되면 실행할 함수 추가
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.playVideo();  // 플레이어가 준비되면 재생 시작
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                player.playVideo(); // 영상이 끝나면 다시 재생
+            }
+        }
+    </script>
+</body>
+</html>
