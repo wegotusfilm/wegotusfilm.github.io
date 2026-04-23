@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Original Works — WEGOTUS FILM</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon/favicon.ico?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #080808;
+            --surface: #111111;
+            --border: rgba(255,255,255,0.08);
+            --text: #ffffff;
+            --muted: rgba(255,255,255,0.35);
+            --accent: #ffffff;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* ── 네비게이션 ── */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            height: 64px;
+            background: rgba(8,8,8,0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .navbar .logo {
+            height: 28px;
+            width: auto;
+            display: block;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .navbar .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .navbar .nav-links a:hover,
+        .navbar .nav-links a.active {
+            color: var(--text);
+        }
+
+        /* ── 메인 콘텐츠 ── */
+        .page-wrap {
+            padding-top: 64px;
+        }
+
+        /* ── 헤더 ── */
+        .page-header {
+            padding: 64px 40px 40px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .page-header .label {
+            font-size: 11px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        .page-header h1 {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+
+        /* ── 영상 그리드 ── */
+        .works-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            max-width: 800px;
+            margin: 48px auto;
+            padding: 0 40px;
+            background: none;
+        }
+
+        .work-item {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            background: var(--surface);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        /* 썸네일 이미지 */
+        .work-item .thumb {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease, opacity 0.3s ease;
+        }
+
+        .work-item:hover .thumb {
+            transform: scale(1.04);
+            opacity: 0.6;
+        }
+
+        /* 호버 오버레이 */
+        .work-item .overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .work-item:hover .overlay {
+            opacity: 1;
+        }
+
+        .play-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255,255,255,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .work-item:hover .play-circle {
+            border-color: #fff;
+            transform: scale(1.05);
+        }
+
+        .play-circle svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+            margin-left: 3px;
+        }
+
+        .work-title {
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            padding: 0 16px;
+            line-height: 1.4;
+        }
+
+        /* ── 모달 ── */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.94);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal-box {
+            position: relative;
+            width: min(90vw, 1040px);
+            aspect-ratio: 16 / 9;
+        }
+
+        .modal-box iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -44px;
+            right: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+            padding: 4px 0;
+        }
+
+        .modal-close:hover { color: #fff; }
+
+        /* ── 반응형 ── */
+        @media (max-width: 900px) {
+            .works-grid { padding: 0 20px; }
+            .navbar { padding: 0 24px; }
+            .page-header { padding: 48px 24px 32px; }
+        }
+
+        @media (max-width: 600px) {
+            .navbar .nav-links { display: none; }
+        }
+
+        /* ── 페이드인 애니메이션 ── */
+        .work-item {
+            animation: fadeUp 0.5s ease both;
+        }
+        .work-item:nth-child(1) { animation-delay: 0.05s; }
+        .work-item:nth-child(2) { animation-delay: 0.10s; }
+        .work-item:nth-child(3) { animation-delay: 0.15s; }
+        .work-item:nth-child(4) { animation-delay: 0.20s; }
+        .work-item:nth-child(5) { animation-delay: 0.25s; }
+        .work-item:nth-child(6) { animation-delay: 0.30s; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 네비게이션 -->
+    <nav class="navbar">
+        <a href="index.html">
+            <img src="images/LOGO_WEGOTUS_2025ver.png" alt="WEGOTUS FILM" class="logo">
+        </a>
+        <div class="nav-links">
+            <a href="https://www.notion.so/WEGOTUS-FILM-111148460e79803487ced32574e27782">About</a>
+            <a href="https://www.notion.so/WEGOTUS-FILM-111148460e79803487ced32574e27782">VFX &amp; Post</a>
+            <a href="https://www.notion.so/WEGOTUS-FILM-111148460e79803487ced32574e27782">Motion &amp; Animation</a>
+            <a href="originalworks.html" class="active">Original Works</a>
+            <a href="https://www.notion.so/WEGOTUS-FILM-111148460e79803487ced32574e27782">Collaborations</a>
+        </div>
+    </nav>
+
+    <div class="page-wrap">
+
+        <!-- 페이지 헤더 -->
+        <div class="page-header">
+            <p class="label">WEGOTUS FILM</p>
+            <h1>Original Works</h1>
+        </div>
+
+        <!-- 영상 그리드 -->
+        <div class="works-grid" id="works-grid">
+
+            <div class="work-item" data-id="5tYVarL8Ue8">
+                <img class="thumb" src="https://img.youtube.com/vi/5tYVarL8Ue8/mqdefault.jpg" alt="">
+                <div class="overlay">
+                    <div class="play-circle">
+                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work-item" data-id="wbG8a4dw62g">
+                <img class="thumb" src="https://img.youtube.com/vi/wbG8a4dw62g/mqdefault.jpg" alt="">
+                <div class="overlay">
+                    <div class="play-circle">
+                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work-item" data-id="dqmh3Yhg3QU">
+                <img class="thumb" src="https://img.youtube.com/vi/dqmh3Yhg3QU/mqdefault.jpg" alt="">
+                <div class="overlay">
+                    <div class="play-circle">
+                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- 영상 모달 -->
+    <div class="modal-backdrop" id="modal">
+        <div class="modal-box">
+            <button class="modal-close" id="modal-close">✕ &nbsp;Close</button>
+            <iframe id="modal-iframe"
+                allow="autoplay; encrypted-media"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('modal');
+        const iframe = document.getElementById('modal-iframe');
+        const closeBtn = document.getElementById('modal-close');
+
+        // 그리드 클릭 → 모달 오픈
+        document.getElementById('works-grid').addEventListener('click', function(e) {
+            const item = e.target.closest('.work-item');
+            if (!item) return;
+            const id = item.dataset.id;
+            iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // 닫기 버튼
+        closeBtn.addEventListener('click', closeModal);
+
+        // 배경 클릭으로 닫기
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
+
+        // ESC 키로 닫기
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        function closeModal() {
+            modal.classList.remove('open');
+            iframe.src = '';
+            document.body.style.overflow = '';
+        }
+    </script>
+
+</body>
+</html>
