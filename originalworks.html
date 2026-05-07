@@ -30,51 +30,64 @@
             min-height: 100vh;
         }
 
-        /* ── 네비게이션 ── */
+        /* ── 네비게이션: 메인홈 styles.css와 동일 ── */
         .navbar {
             position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
+            width: 100%;
+            height: 140px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(18, 14, 14, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1.5rem 2rem;
+            box-sizing: border-box;
+            background-image: url('images/background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .navbar a {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 40px;
-            height: 64px;
-            background: rgba(8,8,8,0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
+            text-decoration: none;
         }
 
         .navbar .logo {
-            height: 28px;
-            width: auto;
-            display: block;
+            height: 50px;
+            margin-right: 30px;
         }
 
         .navbar .nav-links {
             display: flex;
-            gap: 32px;
-            align-items: center;
+            gap: 2.5rem;
+            margin-left: auto;
+            padding-right: 20px;
         }
 
         .navbar .nav-links a {
-            color: var(--muted);
             text-decoration: none;
-            font-size: 12px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            transition: color 0.2s;
+            color: #272727;
+            transition: color 0.3s ease;
+            font-size: 14px;
         }
 
         .navbar .nav-links a:hover,
         .navbar .nav-links a.active {
-            color: var(--text);
+            color: #ddd;
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
         }
 
         /* ── 메인 콘텐츠 ── */
         .page-wrap {
-            padding-top: 64px;
+            padding-top: 140px;
         }
 
         /* ── 헤더 ── */
@@ -227,14 +240,29 @@
         .modal-close:hover { color: #fff; }
 
         /* ── 반응형 ── */
-        @media (max-width: 900px) {
+        @media screen and (max-width: 800px) {
+            .menu-toggle { display: block; }
+            .navbar .nav-links {
+                display: none;
+                position: absolute;
+                top: 80px; left: 0; right: 0;
+                flex-direction: column;
+                background-color: #fff;
+                padding: 1rem;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                width: 100%;
+                text-align: center;
+            }
+            .navbar .nav-links.active { display: flex; align-items: center; }
+            .navbar .logo { height: 40px; }
+            .navbar { height: 125px; }
             .works-grid { padding: 0 20px; }
-            .navbar { padding: 0 24px; }
             .page-header { padding: 48px 24px 32px; }
         }
 
-        @media (max-width: 600px) {
-            .navbar .nav-links { display: none; }
+        @media screen and (max-width: 500px) {
+            .navbar { height: 80px; }
+            .navbar .logo { height: 30px; margin-right: 30px; }
         }
 
         /* ── 페이드인 애니메이션 ── */
@@ -261,6 +289,7 @@
         <a href="index.html">
             <img src="images/LOGO_WEGOTUS_2025ver.png" alt="WEGOTUS FILM" class="logo">
         </a>
+        <div class="menu-toggle">☰</div>
         <div class="nav-links">
             <a href="about.html">About | Contact</a>
             <a href="https://www.notion.so/WEGOTUS-FILM-111148460e79803487ced32574e27782">VFX &amp; Post</a>
@@ -355,6 +384,15 @@
             modal.classList.remove('open');
             iframe.src = '';
             document.body.style.overflow = '';
+        }
+
+        // 햄버거 메뉴
+        const toggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        if (toggle) {
+            toggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
         }
     </script>
 
